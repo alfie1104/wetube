@@ -1,4 +1,9 @@
-export const home = (req, res) => res.render("home", {pageTitle : "Home"}); //render의 두번째 인자로 전달된 값은 view page에서 #{key}로 획득가능
+import {videos} from "../db";
+
+export const home = (req, res) => {
+    res.render("home", {pageTitle : "Home", videos}); //render의 두번째 인자로 전달된 값은 view page에서 #{key}로 획득가능
+};
+
 export const search = (req, res) => {
     const {query: {term : searchingBy}} = req; //const searchingBy = req.query.term 과 같음
 
