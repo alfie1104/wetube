@@ -2,7 +2,7 @@ extends layouts/main
 
 block content
     .form-container
-        form(action=routes.deleteVideo, method="post")
+        form(action=`/videos${routes.deleteVideo}`, method="post")
             input(type="text", placeholder="Title", name="title")
             textarea(placeholder="Description", name="description")
             input(type="submit", value="Delete Video")
