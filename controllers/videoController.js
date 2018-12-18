@@ -1,7 +1,17 @@
 import routes from "../routes";
+import Video from "../models/Video";
 
-export const home = (req, res) => {
-    res.render("home", {pageTitle : "Home", videos}); //render의 두번째 인자로 전달된 값은 view page에서 #{key}로 획득가능
+//DB에서 데이터를 가져왔을때 함수가 실행되도록 하기 위해 async 함수로 생성
+//async함수는 await로 지정된 부분이 완료되길 기다림. await부분이 완료되면 await구문 이후 코드가 실행됨
+export const home = async (req, res) => {
+    try{
+        const videos = await Video.find({}); //모든 Video 데이터를 가져옴
+        //await로 지정된 Video.find()가 완료되어야 다음 render함수가 실행됨
+        res.render("home", {pageTitle : "Home", videos}); //render의 두번째 인자로 전달된 값은 view page에서 #{key}로 획득가능
+    }catch(error){
+        console.log(error);
+        res.render("home", {pageTitle : "Home", videos:[]}); 
+    }
 };
 
 export const search = (req, res) => {
@@ -16,6 +26,7 @@ export const postUpload = (req, res) => {
     const {
         body : {file, title, description}
     } = req;
+    console.dir(file, title, description);
     // To Do : Upload and save video
     res.redirect(routes.videoDetail(324393));
 };
