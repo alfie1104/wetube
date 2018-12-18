@@ -1,50 +1,17 @@
-export const videos = [
-    {
-        id:324393,
-        title: 'Video awesome',
-        description: 'This is something I love',
-        views:24,
-        videoFile: "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
-        creator: {
-            id :121212,
-            name:"Alfie",
-            email:"alfie@gmail.com"
-        }
-    },
-    {
-        id:123123,
-        title: 'Video Super',
-        description: 'This is something I love',
-        views:24,
-        videoFile: "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
-        creator: {
-            id :121212,
-            name:"Alfie",
-            email:"alfie@gmail.com"
-        }
-    },
-    {
-        id:334351,
-        title: 'Video Nice',
-        description: 'This is something I love',
-        views:24,
-        videoFile: "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
-        creator: {
-            id :121212,
-            name:"Alfie",
-            email:"alfie@gmail.com"
-        }
-    },
-    {
-        id:321232,
-        title: 'Video Perfect',
-        description: 'This is something I love',
-        views:24,
-        videoFile: "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
-        creator: {
-            id :121212,
-            name:"Alfie",
-            email:"alfie@gmail.com"
-        }
-    }
-];
+import mongoose from "mongoose"; //mongodb 사용을 위해 mongoose 임포트
+import dotenv from "dotenv"; //.env에 저장한 설정정보들을 읽을 수 있도록 dotenv 임포트
+dotenv.config(); //.env 파일에 적힌 내용을 process.env에 등록시켜줌
+
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useFindAndModify : false
+});
+
+
+const db = mongoose.connection;
+const handleError = (error) => console.log(`Error on DB Connection:${error}`);
+
+const handleOpen = () => console.log("Connected to DB");
+
+db.once("open", handleOpen);
+db.on("error", handleError);
