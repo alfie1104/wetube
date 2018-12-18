@@ -1,7 +1,7 @@
 import multer from "multer";
 import routes from "./routes";
 
-const multerVideo = multer({dest:"videos/"});
+const multerVideo = multer({dest:"uploads/videos/"});
 
 export const localsMiddleware = (req, res, next) => {
     res.locals.siteName = "WeTube"; //view 페이지들에서 사용할 local 변수들을 res.locals에 생성. view 페이지에서는 #{변수명}으로 local변수 획득가능
