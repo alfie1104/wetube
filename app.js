@@ -13,6 +13,8 @@ const app = express();
 
 app.use(helmet());
 app.set("view engine", "pug");
+app.use("/upload", express.static("uploads")); //사용자가 동영상파일에 접근가느하도록 static middleware사용. 
+//첫번째 인자는 사용자가 웹에서 접근하는 url이며, static함수 내부 경로는 실제 전달할 파일이 보관된 위치임
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
