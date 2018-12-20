@@ -14,12 +14,23 @@ export const home = async (req, res) => {
     }
 };
 
-export const search = (req, res) => {
+export const search = async (req, res) => {
     const {
         query: { term: searchingBy }
     } = req; //const searchingBy = req.query.term 과 같음
 
-    res.render("search", { pageTitle: "Search", searchingBy });  //뒤에 searchingBy는 키와 값의 이름이 같으므로 searchingBy : searchingBy에서 searchingBy로 생략가능(ES6)
+    let videos = [];
+    try {
+        videos = await Video.find({
+            title: {
+                $regex: searchingBy, $options: "i"
+            }
+        }); //대소문자를 구분하지 않기 위해 i를 옵션으로 줌(ignore case)
+    } catch (error) {
+        console.log(error);
+    }
+
+    res.render("search", { pageTitle: "Search", searchingBy, videos });  //뒤에 searchingBy는 키와 값의 이름이 같으므로 searchingBy : searchingBy에서 searchingBy로 생략가능(ES6)
 };
 export const getUpload = (req, res) => res.render("upload", { pageTitle: "Upload" });
 export const postUpload = async (req, res) => {
