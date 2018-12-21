@@ -1,11 +1,13 @@
 extends layouts/main
 
 block content
-    .video__player
-        video(src=video.fileUrl, controls=true)
-    .video__info
-        a(href=routes.editVideo(video.id)) Edit Video
-        h5.video__title=video.title
-        span.video__views=video.views
-        p.video__description=video.description
-    .video__comments
+    .video-detail__container
+        .video__player
+            video(src=video.fileUrl, controls=true)
+        .video__info
+            a(href=routes.editVideo(video.id))
+                button Edit Video
+            h5.video__title=video.title
+            span.video__views=video.views
+            p.video__description=video.description
+        .video__comments
