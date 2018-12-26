@@ -31,8 +31,8 @@ export const postJoin = async (req, res, next) => {
 
 export const getLogin = (req, res) => res.render("login", { pageTitle: "Log In" });
 export const postLogin = passport.authenticate('local', {
-    successRedirect: routes.login,
-    failureRedirect: routes.home
+    failureRedirect: routes.login,
+    successRedirect: routes.home
 });
 
 export const logout = (req, res) => {
