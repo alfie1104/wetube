@@ -3,8 +3,10 @@ import morgan from "morgan"; //logger middleware
 import helmet from "helmet"; //security middleware
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
-import passport from "passport";
-import session from "express-session";
+import passport from "passport"; //사용자 인증을 위한 모듈
+import mongoose from "mongoose";
+import MongoStore from "connect-mongo"; //메모리상에서 기억하고 있던 사용자 쿠키정보를 mongo DB에 기록하기 위한 모듈
+import session from "express-session"; //session 관리를 위한 모듈
 import path from "path";
 import { localsMiddleware } from "./middlewares"; //로컬 변수를 view페이지에서 사용하기 위해 localMiddleware를 생성하였음. res.locals.XXX형식으로 변수 생성 후 view 페이지에서 #{XXX}형식으로 변수 접근가능
 import routes from "./routes";
@@ -15,6 +17,8 @@ import globalRouter from "./routers/globalRouter";
 import "./passport";
 
 const app = express();
+
+const CokieStore = MongoStore(session);
 
 app.use(helmet());
 app.set("view engine", "pug");
@@ -28,7 +32,8 @@ app.use(morgan("dev")); //logging configuration
 app.use(session({
     secret: process.env.COOKIE_SECRET,
     resave: true,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: new CokieStore({ mongooseConnection: mongoose.connection })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
