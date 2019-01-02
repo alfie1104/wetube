@@ -1,9 +1,14 @@
 .social-login
     button.social-login--github
         a(href=routes.gitHub)
-            i.fab.fa-github
-        |Cotinue with Github
+            Span
+                i.fab.fa-github
+            |Cotinue with Github
     button.social-login--facebook
-        span
-            i.fab.fa-facebook
-        |Cotinue with Facebook
+        a(href=routes.facebook)
+            span
+                i.fab.fa-facebook
+            |Cotinue with Facebook
+    a(href=routes.kakao)
+        button.social-login--kakao
+        

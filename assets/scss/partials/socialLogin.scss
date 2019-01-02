@@ -25,4 +25,12 @@
     background-color: #3a5998;
     color: white;
   }
+  .social-login--kakao {
+    background: url('http://localhost:4000/static/images/kakao-login.png');
+    color: white;
+    height : 35px;
+    width : 100%;
+    background-size : cover;
+    background-position : center;
+  }
 }
