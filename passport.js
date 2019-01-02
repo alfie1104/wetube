@@ -30,7 +30,9 @@ passport.use(
 passport.use(
     new Kakaostrategy({
         clientID: process.env.KAKAO_ID,
-        callbackURL: `http://localhost:4000${routes.kakaoCallback}`
+        callbackURL: `https://tall-newt-59.localtunnel.me${routes.kakaoCallback}`,
+        profileFields: ['id', 'displayName', 'photos', 'email'],
+        scope: ['public_profile', 'email']
     }, kakaoLoginCallback)
 );
 
