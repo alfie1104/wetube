@@ -37,12 +37,39 @@ export const postLogin = passport.authenticate('local', {
 
 export const githubLogin = passport.authenticate("github");
 
-export const githubLoginCallback = (accessToken, refreshToken, profile, cb) => {
-    console.log(accessToken, refreshToken, profile, cb);
+export const githubLoginCallback = async (_, __, profile, cb) => {
+
+    const { _json: { id, avatar_url, name, email, displayName } } = profile;
+
+    console.log(email);
+    console.log(displayName);
+    try {
+        const user = await User.findOne({ email: displayName });
+        //원래  findOne({email})과 같이 해서 email : email을 찾아야하지만,
+        //현재 내 아이디의 email값이 null이어서 displayName을 이용하였음
+
+        if (user) {
+            user.githubId = id;
+            user.save();
+            return cb(null, user);
+        }
+
+        const newUser = await User.create({
+            email: displayName,
+            name,
+            githubId: id,
+            avatarUrl: avatar_url
+        });
+        return cb(null, newUser);
+    } catch (error) {
+        return cb(error);
+    }
+
+    //console.log(profile);
 };
 
 export const postGithubLogIn = (req, res) => {
-    res.send(routes.home);
+    res.redirect(routes.home);
 }
 
 export const logout = (req, res) => {
