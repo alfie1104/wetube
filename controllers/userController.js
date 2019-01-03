@@ -39,13 +39,10 @@ export const githubLogin = passport.authenticate("github");
 
 export const githubLoginCallback = async (_, __, profile, cb) => {
 
-    const { _json: { id, avatar_url: avatarUrl, name, email }, displayName } = profile;
+    const { _json: { id, avatar_url: avatarUrl, name, email } } = profile;
 
     try {
-        const user = await User.findOne({ email: displayName });
-        //원래  findOne({email})과 같이 해서 email : email을 찾아야하지만,
-        //현재 내 아이디의 email값이 null이어서 displayName을 이용하였음
-
+        const user = await User.findOne({ email });
         if (user) {
             user.githubId = id;
             user.save();
@@ -53,7 +50,7 @@ export const githubLoginCallback = async (_, __, profile, cb) => {
         }
 
         const newUser = await User.create({
-            email: displayName,
+            email,
             name,
             githubId: id,
             avatarUrl
@@ -122,19 +119,42 @@ export const logout = (req, res) => {
     res.redirect(routes.home);
 };
 
-export const getMe = (req, res) => {
-    res.render("userDetail", { pageTitle: "User Detail", user: req.user });
+export const getMe = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        res.render("userDetail", { pageTitle: "User Detail", user });
+    } catch (error) {
+        res.redirect(routes.home);
+    }
 };
 
 export const userDetail = async (req, res) => {
     const { params: { id } } = req;
     try {
         const user = await User.findById(id);
-
         res.render("userDetail", { pageTitle: "User Detail", user });
     } catch (error) {
         res.redirect(routes.home);
     }
-}
-export const editProfile = (req, res) => res.render("editProfile", { pageTitle: "Edit Profile" });
+};
+export const getEditProfile = (req, res) => res.render("editProfile", { pageTitle: "Edit Profile" });
+
+export const postEditProfile = async (req, res) => {
+    const {
+        body: { name, email },
+        file
+    } = req;
+
+    try {
+        await User.findByIdAndUpdate(req.user.id, {
+            name,
+            email,
+            avatarUrl: file ? file.path : req.user.avatarUrl
+        });
+        res.redirect(routes.me);
+    } catch (error) {
+        res.render("editProfile", { pageTitle: "Edit Profile" });
+    }
+};
+
 export const changePassword = (req, res) => res.render("changePassword", { pageTitle: "Change Password" });
