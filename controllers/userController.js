@@ -131,7 +131,7 @@ export const getMe = async (req, res) => {
 export const userDetail = async (req, res) => {
     const { params: { id } } = req;
     try {
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate("videos"); //User가 가지고 있는 videos 객체의 정보들도 함께 가져오기 위해 populate 사용
         res.render("userDetail", { pageTitle: "User Detail", user });
     } catch (error) {
         res.redirect(routes.home);
