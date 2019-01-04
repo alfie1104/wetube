@@ -1,13 +1,17 @@
 import mongoose from "mongoose";
 
 const CommentSchema = new mongoose.Schema({
-    text:{
-        type:String,
-        required:"Text is required"
+    text: {
+        type: String,
+        required: "Text is required"
     },
-    createdAt : {
+    createdAt: {
         type: Date,
         default: Date.now
+    },
+    creator: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "User"
     }
 });
 

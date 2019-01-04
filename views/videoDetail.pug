@@ -1,13 +1,67 @@
-extends layouts/main
+//- 한줄 주석
 
+//- 
+    여러줄 주석
+    여러줄을 하나로 연결해서 입력하고 싶을 때 | (pipe) 를 사용하면 된다.
+    A
+    |B 일 경우, AB 로 출력됨
+
+extends layouts/main
+include mixins/videoPlayer
+//- layout/main.pug 파일을 상속받는다.
+
+//- 
+    extends 후, 그냥 block을 쓰면 부모 파일의 block을 덮으쓰게 되고 
+    append/prepend를 이용해서 block append xxx와 같은식으로 하면 부모파일의 block을 유지한채 붙일 수 있다.
+
+//- 
+    javascript 코드를 사용하려면
+    1) -를 이용할 수 있다.
+        - for (var x = 0; x < 3; x++)
+        li item
+    을 하면 <li>item</li>가 3개 생성된다.
+
+    2) =를 이용해서 이스케이프된 버퍼 코드를 쓸 수 있다.
+       p= 'This code is' + ' <escaped>!'
+    를 하면 <p>This code is &lt;escaped&gt;!</p> 가 생성된다.
+    3) 이스케이프되지 않은 자바스크립트 코드를 쓰고 싶다면 != 를 이용한다.
+       p!= 'This code is' + ' <escaped>!'
+    를 하면 <p>This code is <escpaed>!</p> 가 생성된다.
+
+//-
+    믹스인 사용. mixin은 재사용가능한 블럭을 반드는 것이다.
+    함수처럼 선언(mixin)하고 사용(+) 하면 된다. +로 불러와서 사용한다.
+    ex) mixin list
+            ul
+                li foo
+                li bar
+                li baz
+        +list
+        +list
+//-
+    태그에 클래스 입력시 div.user와 같이 . 을 사용한다.
+    태그에 아이디 입력시 div#user와 같이 # 을 사용한다.
 block content
     .video-detail__container
-        .video__player
-            video(src=video.fileUrl, controls=true)
+        +videoPlayer({
+            src:video.fileUrl
+        })
         .video__info
-            a(href=routes.editVideo(video.id))
-                button Edit Video
+            if loggedUser && video.creator.id === loggedUser.id
+                a(href=routes.editVideo(video.id))
+                    button Edit Video
             h5.video__title=video.title
-            span.video__views=video.views
             p.video__description=video.description
+            if video.views === 1
+                span.video__views 1 view
+            else
+                span.video__views #{video.views} views
+            .video__author
+                |Uploaded by 
+                a(href=routes.userDetail(video.creator.id))=video.creator.name
         .video__comments
+            if video.comments.length === 1
+                span.video__comment-number 1 comment
+            else
+                span.video__comment-number #{video.comments.length} comments
+        
