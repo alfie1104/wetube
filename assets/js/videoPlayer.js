@@ -1,19 +1,47 @@
 const videoContainer = document.getElementById("jsVideoPlayer");
 const videoPlayer = document.querySelector("#jsVideoPlayer video");
 const playBtn = document.getElementById("jsPlayButton");
+const volumeBtn = document.getElementById("jsVolumeBtn");
+const fullScreenBtn = document.getElementById("jsFullScreen");
 
 function handlePlayClick() {
     if (videoPlayer.paused) {
         videoPlayer.play();
-        videoPlayer.innerHTML = '<i class="fas fa-pause"></i>';
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
     } else {
         videoPlayer.pause();
-        videoPlayer.innerHTML = '<i class="fas fa-play"></i>';
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
     }
+}
+
+function handleVolumeClick() {
+    if (videoPlayer.muted) {
+        videoPlayer.muted = false;
+        volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+    } else {
+        videoPlayer.muted = true;
+        volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    }
+}
+
+
+function exitFullScreen() {
+    document.webkitExitFullscreen();
+    fullScreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+    fullScreenBtn.addEventListener("click", goFullScreen);
+}
+
+function goFullScreen() {
+    videoContainer.webkitRequestFullscreen(); //webkit : engine that google chrome uses, moz : firefox uses, ms : IE
+    fullScreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+    fullScreenBtn.removeEventListener("click", goFullScreen);
+    fullScreenBtn.addEventListener("click", exitFullScreen);
 }
 
 function init() {
     playBtn.addEventListener("click", handlePlayClick);
+    volumeBtn.addEventListener("click", handleVolumeClick);
+    fullScreenBtn.addEventListener("click", goFullScreen);
 }
 
 if (videoContainer) {
