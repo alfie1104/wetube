@@ -57,7 +57,6 @@ export const videoDetail = async (req, res) => {
     } = req;
     try {
         const video = await Video.findById(id).populate('creator'); //populate 함수를 이용하면 ObjectID Type인 필드의 개체를 가져올 수 있음
-        console.log(video);
         res.render("videoDetail", { pageTitle: video.title, video });
     } catch (error) {
         console.log(error);
@@ -71,7 +70,7 @@ export const getEditVideo = async (req, res) => {
     } = req;
     try {
         const video = await Video.findById(id);
-        if (video.creator !== req.user.id) {
+        if (String(video.creator) !== req.user.id) {
             throw Error();
         } else {
             res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
@@ -101,7 +100,7 @@ export const deleteVideo = async (req, res) => {
 
     try {
         const video = await Video.findById(id);
-        if (video.creator !== req.user.id) {
+        if (String(video.creator) !== req.user.id) {
             throw Error();
         } else {
             await Video.findOneAndRemove({ _id: id });

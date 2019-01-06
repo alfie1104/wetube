@@ -5,5 +5,8 @@ module.exports = {
         "spaced-comment": "off",
         "prettier/prettier": "off",
         "no-console": "off"
+    },
+    env: {
+        browser: true
     }
 };
