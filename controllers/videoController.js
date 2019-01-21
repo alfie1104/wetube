@@ -1,5 +1,6 @@
 import routes from "../routes";
 import Video from "../models/Video";
+import Comment from "../models/Comment";
 
 //DB에서 데이터를 가져왔을때 함수가 실행되도록 하기 위해 async 함수로 생성
 //async함수는 await로 지정된 부분이 완료되길 기다림. await부분이 완료되면 await구문 이후 코드가 실행됨
@@ -56,7 +57,7 @@ export const videoDetail = async (req, res) => {
         params: { id }
     } = req;
     try {
-        const video = await Video.findById(id).populate('creator'); //populate 함수를 이용하면 ObjectID Type인 필드의 개체를 가져올 수 있음
+        const video = await Video.findById(id).populate('creator').populate('comments'); //populate 함수를 이용하면 ObjectID Type인 필드의 개체를 가져올 수 있음
         res.render("videoDetail", { pageTitle: video.title, video });
     } catch (error) {
         console.log(error);
@@ -125,6 +126,29 @@ export const postRegisterView = async (req, res) => {
     } catch (error) {
         res.status(400); //Fail
         res.end();
+    } finally {
+        res.end();
+    }
+};
+
+//ADD Comment
+export const postAddComment = async (req, res) => {
+    const {
+        params: { id },
+        body: { comment },
+        user
+    } = req;
+
+    try {
+        const video = await Video.findById(id);
+        const newComment = await Comment.create({
+            text: comment,
+            creator: user.id
+        });
+        video.comments.push(newComment.id);
+        video.save();
+    } catch (error) {
+        res.status(400);
     } finally {
         res.end();
     }

@@ -66,4 +66,9 @@ block content
             else
                 span.video__comment-number=video.comments.length
                 | comments
-        
+            form.add__comment#jsAddComment
+                input(type="text", placeholder="Add a comment")
+            ul.video__comments-list
+                each comment in video.comments
+                    li
+                        span=comment.text
